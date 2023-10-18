@@ -1,4 +1,10 @@
-on: push
+on: 
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
 name: CI
 jobs:
   phpunit:
@@ -38,3 +44,21 @@ jobs:
         
     - name: Run Testsuite
       run: php artisan test
+  build:
+    name: Build
+    if: ${{ github.event.pull_request.merged }}
+    runs-on: ubuntu-latest
+    steps:
+    - name: executing remote ssh commands using password
+      uses: appleboy/ssh-action@v0.1.10
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.KEY }}
+        port: ${{ secrets.PORT }}
+        script: |
+          cd /home/ubuntu/demo/demo-github-actions-laravel
+          git pull
+          sudo docker exec -it container-php bash
+          composer update
+          php artisan migrate
