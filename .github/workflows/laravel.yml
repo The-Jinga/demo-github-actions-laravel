@@ -31,7 +31,7 @@ jobs:
         php artisan key:generate
 
     - name: Run PHPCS
-       run: ./vendor/bin/phpcs
+      run: ./vendor/bin/phpcs
     
     - name: Run migration
       run: php artisan migrate --seed
