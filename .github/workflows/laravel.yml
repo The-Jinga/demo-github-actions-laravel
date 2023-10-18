@@ -45,4 +45,3 @@ jobs:
       - name: Run Laravel Tests
         run: php artisan test
 
-      # Add more steps here as needed for your specific CI/CD process.
