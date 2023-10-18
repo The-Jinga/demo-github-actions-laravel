@@ -1,0 +1,25 @@
+on: 
+  pull_request:
+    branches: 
+      - main
+    types: [closed]
+name: CD
+jobs:
+  build:
+    name: Build
+    if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+    - name: executing remote ssh commands using password
+      uses: appleboy/ssh-action@v0.1.10
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.KEY }}
+        port: ${{ secrets.PORT }}
+        script: |
+          cd /home/ubuntu/demo/demo-github-actions-laravel
+          git pull
+          sudo docker exec -it container-php bash
+          composer update
+          php artisan migrate
