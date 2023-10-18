@@ -29,7 +29,12 @@ jobs:
       run: |
         cp .env.example .env
         php artisan key:generate
-        php artisan migrate
- 
+
+    - name: Run PHPCS
+       run: ./vendor/bin/phpcs
+    
+    - name: Run migration
+      run: php artisan migrate --seed
+        
     - name: Run Testsuite
-      run: vendor/bin/phpunit tests/
+      run: php artisan test
