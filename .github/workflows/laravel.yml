@@ -30,9 +30,11 @@ jobs:
           mysql root password: 'password'
           mysql user: 'developer' 
           mysql password: 'password' #
-          
-      - name: Install Composer Dependencies
-        run: composer install
+              
+      - name: Install Composer Dependencies and Generate Application Key
+        run: |
+          composer install
+          php artisan key:generate
 
       - name: Run PHPCS
         run: ./vendor/bin/phpcs
