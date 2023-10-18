@@ -38,6 +38,7 @@ jobs:
         run : |
           cp .env.example .env
           php artisan key:generate
+          php artisan migrate --seed
                 
       - name: Run PHPCS
         run: ./vendor/bin/phpcs
