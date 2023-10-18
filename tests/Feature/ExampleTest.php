@@ -10,7 +10,7 @@ class ExampleTest extends TestCase
     /**
      * A basic test example.
      */
-    public function testTheApplicationReturnsASuccessfulResponse(): void
+    public function test_TheApplicationReturnsASuccessfulResponse(): void
     {
         $response = $this->get('/');
 
