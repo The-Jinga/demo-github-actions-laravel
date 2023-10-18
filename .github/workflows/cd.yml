@@ -15,11 +15,12 @@ jobs:
       - uses: actions/checkout@v2 
       - name: Build & Deploy
         env:
-            PRIVATE_KEY: ${{secrets.KEY}}
+            PRIVATE_KEY: ${{ secrets.KEY }}
             HOSTNAME: ${{secrets.HOST}}
             USER_NAME: ${{secrets.USERNAME}}
       
         run: |
+
           echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
           ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
 
@@ -29,3 +30,4 @@ jobs:
               sudo docker exec -it container-php bash
               composer update
               php artisan migrate
+              '
