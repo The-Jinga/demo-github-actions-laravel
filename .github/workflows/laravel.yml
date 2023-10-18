@@ -46,7 +46,7 @@ jobs:
       run: php artisan test
   build:
     name: Build
-    if: ${{ github.event.pull_request.merged }}
+    if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
     - name: executing remote ssh commands using password
