@@ -1,10 +1,8 @@
 on: 
   pull_request:
-    branches:
+    branches: 
       - main
-  push:
-    branches:
-      - main
+    types: [closed]
 name: CI
 jobs:
   phpunit:
