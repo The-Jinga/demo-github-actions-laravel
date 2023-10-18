@@ -1,25 +1,31 @@
-on: 
+name: CD
+
+on:
   pull_request:
     branches: 
       - main
     types: [closed]
-name: CD
+
 jobs:
-  build:
-    name: Build
-    if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true
+  Deploy:
+    name: Deploy to EC2
     runs-on: ubuntu-latest
+    
     steps:
-    - name: executing remote ssh commands using password
-      uses: appleboy/ssh-action@v0.1.10
-      with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        key: ${{ secrets.KEY }}
-        port: ${{ secrets.PORT }}
-        script: |
-          cd /home/ubuntu/demo/demo-github-actions-laravel
-          git pull
-          sudo docker exec -it container-php bash
-          composer update
-          php artisan migrate
+      - uses: actions/checkout@v2 
+      - name: Build & Deploy
+        env:
+            PRIVATE_KEY: ${{ secrets.KEY }}
+            HOSTNAME: ${{secrets.HOST}}
+            USER_NAME: ${{secrets.USERNAME}}
+      
+        run: |
+          echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
+          ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
+
+              # Now we have got the access of EC2 and we will start the deploy .
+              cd /home/ubuntu/demo/demo-github-actions-laravel
+              git pull
+              sudo docker exec -it container-php bash
+              composer update
+              php artisan migrate
