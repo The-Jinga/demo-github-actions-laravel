@@ -1,40 +1,40 @@
-name: Laravel
-
-on:
-  pull_request:
-    branches:
-      - main
-
+on: push
+name: CI
 jobs:
-  build:
+  phpunit:
     runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set up PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: 8.1
-
-      - name: Install Composer Dependencies
-        run: composer install
-
-      - name: Set up Database
-        run: |
-          cp .env.example .env
-          php artisan key:generate
-          php artisan migrate --seed
+    container:
+      image: kirschbaumdevelopment/laravel-test-runner:8.1
+ 
+    services:
+      mysql:
+        image: mysql:5.7
         env:
-          DB_CONNECTION: mysql
-          DB_HOST: 127.0.0.1
-          DB_PORT: 3306
-          DB_DATABASE: your_database_name
-          DB_USERNAME: your_database_username
-          DB_PASSWORD: your_database_password
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: test
+        ports:
+          - 33306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+ 
+    steps:
+    - uses: actions/checkout@v1
+      with:
+        fetch-depth: 1
+ 
+    - name: Install composer dependencies
+      run: |
+        composer install --no-scripts
+ 
+    - name: Prepare Laravel Application
+      run: |
+        cp .env.example .env
+        php artisan key:generate
 
-      - name: Run Laravel Tests
-        run: php artisan test
-
-      # Add more steps here as needed for your specific CI/CD process.
+    - name: Run PHPCS
+      run: ./vendor/bin/phpcs
+    
+    - name: Run migration
+      run: php artisan migrate --seed
+        
+    - name: Run Testsuite
+      run: php artisan test
