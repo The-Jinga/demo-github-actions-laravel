@@ -26,7 +26,6 @@ jobs:
               # Now we have got the access of EC2 and we will start the deploy .
               cd /home/ubuntu/demo/demo-github-actions-laravel
               git pull origin main
-              sudo docker exec -it container-php bash
-              composer update
-              php artisan migrate
+              sudo docker exec container-php composer update
+              sudo docker exec container-php php artisan migrate
               '
