@@ -41,7 +41,7 @@ jobs:
         
     - name: Run Testsuite
       run: php artisan test
-  phpunit:
+  phpunit2:
     runs-on: ubuntu-latest
     container:
       image: kirschbaumdevelopment/laravel-test-runner:8.1
