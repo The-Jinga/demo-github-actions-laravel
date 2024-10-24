@@ -4,6 +4,6 @@
 files=$(git diff --cached --name-only --diff-filter=ACM -- '*.php');
 if [ "$files" != "" ]
 then
-    vendor/bin/phpcs 
+    vendor/bin/phpcs $files
 fi
 
