@@ -2,7 +2,7 @@
 <ruleset name="PHP_CodeSniffer">
     <description>The coding standard for our project.</description>
     <rule ref="PSR12">
-        <exclude name="PSR12.Traits.UseDeclaration"/>
+        <!-- <exclude name="PSR12.Traits.UseDeclaration"/> -->
     </rule>
     <file>app</file>
     <file>bootstrap</file>
