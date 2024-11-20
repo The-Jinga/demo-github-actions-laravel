@@ -41,3 +41,40 @@ jobs:
         
     - name: Run Testsuite
       run: php artisan test
+  phpunit2:
+    runs-on: ubuntu-latest
+    container:
+      image: kirschbaumdevelopment/laravel-test-runner:8.1
+ 
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: test
+        ports:
+          - 33306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+ 
+    steps:
+    - uses: actions/checkout@v1
+      with:
+        fetch-depth: 1
+ 
+    - name: Install composer dependencies
+      run: |
+        composer install --no-scripts
+ 
+    - name: Prepare Laravel Application
+      run: |
+        cp .env.example .env
+        php artisan key:generate
+
+    - name: Run PHPCS
+      run: ./vendor/bin/phpcs
+    
+    - name: Run migration
+      run: php artisan migrate --seed
+        
+    - name: Run Testsuite
+      run: php artisan test
